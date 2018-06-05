@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>traxxs_orca</name>
+  <version>0.0.0</version>
+  <description>traxxs and orca_ros</description>
+
+  <maintainer email="info@fuzzylogicrobotics.com">Fuzzy Logic Robotics</maintainer>
+  <author email="info@fuzzylogicrobotics.com">Antoine Hoarau</author>
+  <author email="info@fuzzylogicrobotics.com">Ryan Lober</author>
+
+  <license>CeCILL-C</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>orca_ros</depend>
+  <depend>traxxs</depend>
+</package>
