@@ -1,39 +1,3 @@
-// This file is a part of the traxxs framework.
-// Copyright 2018, AKEOLAB S.A.S.
-// Main contributor(s): Aurelien Ibanez, aurelien@akeo-lab.com
-//
-// This software is a computer program whose purpose is to help create and manage trajectories.
-//
-// This software is governed by the CeCILL-C license under French law and
-// abiding by the rules of distribution of free software.  You can  use,
-// modify and/ or redistribute the software under the terms of the CeCILL-C
-// license as circulated by CEA, CNRS and INRIA at the following URL
-// "http://www.cecill.info".
-//
-// As a counterpart to the access to the source code and  rights to copy,
-// modify and redistribute granted by the license, users are provided only
-// with a limited warranty  and the software's author,  the holder of the
-// economic rights,  and the successive licensors  have only  limited
-// liability.
-//
-// In this respect, the user's attention is drawn to the risks associated
-// with loading,  using,  modifying and/or developing or reproducing the
-// software by the user in light of its specific status of free software,
-// that may mean  that it is complicated to manipulate,  and  that  also
-// therefore means  that it is reserved for developers  and  experienced
-// professionals having in-depth computer knowledge. Users are therefore
-// encouraged to load and test the software's suitability as regards their
-// requirements in conditions enabling the security of their systems and/or
-// data to be ensured and,  more generally, to use and operate it in the
-// same conditions as regards security.
-//
-// The fact that you are presently reading this means that you have had
-// knowledge of the CeCILL-C license and that you accept its terms.
-
-/**
- * a Cartesian trajectory demonstration with "online" change of path bounds
- */
-
 #include <iostream>
 
 #include <traxxs/trajectory/trajectory.hpp>
@@ -104,17 +68,21 @@ int main(int argc, char *argv[])
     path::CartesianPathWaypoint pt_start, pt_wpt, pt_wpt2, pt_end;
 
     // set the position of the waypoints
-    double box_dim = 0.2;
-    pt_start.x.p  << starting_task_pose.translation() + Eigen::Vector3d(0, 0, 0);//0, 0, 0;
-    pt_wpt.x.p    << starting_task_pose.translation() + Eigen::Vector3d(box_dim, 0, 0); //1, 0, 0;
-    pt_wpt2.x.p   << starting_task_pose.translation() + Eigen::Vector3d(box_dim, box_dim, 0); //1, 1, 0;
-    pt_end.x.p    << starting_task_pose.translation() + Eigen::Vector3d(box_dim, box_dim, -box_dim); //1, 1, 1;
+    double box_dim = -0.2;
+    pt_start.x.p  = starting_task_pose.translation() + Eigen::Vector3d(0, 0, 0);//0, 0, 0;
+    pt_wpt.x.p    = starting_task_pose.translation() + Eigen::Vector3d(box_dim, box_dim, box_dim); //1, 0, 0;
+    pt_wpt2.x.p   = starting_task_pose.translation() + Eigen::Vector3d(1.1*box_dim, 1.1*box_dim, 0); //1, 1, 0;
+    pt_end.x.p    = starting_task_pose.translation() + Eigen::Vector3d(2*box_dim, 2*box_dim, -2*box_dim); //1, 1, 1;
 
     // set the orientation of the waypoints
-    pt_start.x.q  = Eigen::Quaterniond(starting_task_pose.linear());//Eigen::Quaterniond( 1, 0, 0, 0 ); // w, x, y , z
-    pt_wpt.x.q    = Eigen::Quaterniond(starting_task_pose.linear());//::Identity();//Eigen::Quaterniond( 0, 1, 0, 0 ); // w, x, y , z
-    pt_wpt2.x.q   = Eigen::Quaterniond(starting_task_pose.linear());//::Identity();//Eigen::Quaterniond( 0, 1, 0, 0 ); // w, x, y , z
-    pt_end.x.q    = Eigen::Quaterniond(starting_task_pose.linear());//Eigen::Quaterniond( 0, 0, 1, 0 ); // w, x, y , z
+    // pt_start.x.q  = Eigen::Quaterniond::Identity();
+    pt_start.x.q  = Eigen::Quaterniond(starting_task_pose.linear());
+    // pt_wpt.x.q    = Eigen::Quaterniond::Identity();
+    pt_wpt.x.q    = Eigen::Quaterniond(starting_task_pose.linear());
+    // pt_wpt2.x.q   = Eigen::Quaterniond::Identity();
+    pt_wpt2.x.q   = Eigen::Quaterniond(starting_task_pose.linear());
+    // pt_end.x.q    = Eigen::Quaterniond::Identity();
+    pt_end.x.q    = Eigen::Quaterniond(starting_task_pose.linear());
 
     //
     // we can define conditions on the waypoints: here we define velocities
@@ -186,9 +154,11 @@ int main(int argc, char *argv[])
         std::cout << "position: " << state.x.head(3).transpose() << '\n';
         std::cout << "orientation: " << state.x.tail(4).transpose() << '\n';
 
-        Eigen::Matrix4d desired_pose;
-
-        cart_task_proxy->setDesiredPose(desired_pose);
+        Eigen::Affine3d desired_pose;
+        desired_pose.translation() = state.x.head(3);
+        desired_pose.linear()= starting_task_pose.linear();
+        // starting_task_pose.linear() = Eigen::Quaterniond(state.x(3),state.x(4),state.x(5),state.x(6)).toRotationMatrix();
+        cart_task_proxy->setDesiredPose(desired_pose.matrix());
 
         ros::spinOnce();
 
