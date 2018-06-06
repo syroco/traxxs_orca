@@ -4,7 +4,7 @@ project(traxxs_orca)
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
 
-find_package(orca REQUIRED)
+# find_package(orca REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
             roscpp
@@ -25,11 +25,11 @@ include_directories(
 
 
 add_executable(traxxs_traj src/traxxs_traj.cc)
-target_link_libraries(traxxs_traj ${catkin_LIBRARIES} orca::orca)
+target_link_libraries(traxxs_traj ${catkin_LIBRARIES})# orca::orca)
 
 
 add_executable(traxxs_cart_traj src/traxxs_cart_traj.cc)
-target_link_libraries(traxxs_cart_traj ${catkin_LIBRARIES} orca::orca)
+target_link_libraries(traxxs_cart_traj ${catkin_LIBRARIES})# orca::orca)
 
 
 
