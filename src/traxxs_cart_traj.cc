@@ -68,11 +68,11 @@ int main(int argc, char *argv[])
     path::CartesianPathWaypoint pt_start, pt_wpt, pt_wpt2, pt_end;
 
     // set the position of the waypoints
-    double box_dim = -0.2;
+    double box_dim = -0.4;
     pt_start.x.p  = starting_task_pose.translation() + Eigen::Vector3d(0, 0, 0);//0, 0, 0;
-    pt_wpt.x.p    = starting_task_pose.translation() + Eigen::Vector3d(box_dim, box_dim, box_dim); //1, 0, 0;
-    pt_wpt2.x.p   = starting_task_pose.translation() + Eigen::Vector3d(1.1*box_dim, 1.1*box_dim, 0); //1, 1, 0;
-    pt_end.x.p    = starting_task_pose.translation() + Eigen::Vector3d(2*box_dim, 2*box_dim, -2*box_dim); //1, 1, 1;
+    pt_wpt.x.p    = starting_task_pose.translation() + Eigen::Vector3d(box_dim, 0, 0); //1, 0, 0;
+    pt_wpt2.x.p   = starting_task_pose.translation() + Eigen::Vector3d(box_dim, box_dim, 0); //1, 1, 0;
+    pt_end.x.p    = starting_task_pose.translation() + Eigen::Vector3d(box_dim, box_dim, box_dim); //1, 1, 1;
 
     // set the orientation of the waypoints
     // pt_start.x.q  = Eigen::Quaterniond::Identity();
@@ -117,7 +117,10 @@ int main(int argc, char *argv[])
     // create a trajectory on these segments using the softmotion implementation
     auto trajectory = std::make_shared< trajectory::Trajectory >();
     if ( !trajectory->set< ArcTrajGenSoftMotion >( segments ) )
-    return 1;
+    {
+        ROS_ERROR("Could not generate the trajectory with SoftMotion.");
+        return 0;
+    }
 
     int seg_idx;
     bool is_beyond;
