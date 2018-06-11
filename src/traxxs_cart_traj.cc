@@ -61,8 +61,9 @@ int main(int argc, char *argv[])
     // define the path bounds
     path::PathBounds4d path_bounds;
     path_bounds.dx << 1.0, 1.0, 1.0, 10.0;
-    path_bounds.ddx = 10.0 * path_bounds.dx;
-    path_bounds.j = 10.0 * path_bounds.ddx;
+    path_bounds.dx*=10.0;
+    path_bounds.ddx = 20.0 * path_bounds.dx;
+    path_bounds.j = 20.0 * path_bounds.ddx;
 
     // we will use three Cartesian waypoints to define the path: a start, and end, and an intermediate waypoint
     path::CartesianPathWaypoint pt_start, pt_wpt, pt_wpt2, pt_end;
@@ -159,8 +160,8 @@ int main(int argc, char *argv[])
 
         Eigen::Affine3d desired_pose;
         desired_pose.translation() = state.x.head(3);
-        desired_pose.linear()= starting_task_pose.linear();
-        // starting_task_pose.linear() = Eigen::Quaterniond(state.x(3),state.x(4),state.x(5),state.x(6)).toRotationMatrix();
+        // desired_pose.linear()= starting_task_pose.linear();
+        starting_task_pose.linear() = Eigen::Quaterniond(state.x(6), state.x(3),state.x(4),state.x(5)).toRotationMatrix();
         cart_task_proxy->setDesiredPose(desired_pose.matrix());
 
         ros::spinOnce();
