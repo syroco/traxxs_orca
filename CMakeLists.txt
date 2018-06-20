@@ -41,10 +41,6 @@ install(DIRECTORY launch/
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 )
 
-install(DIRECTORY config/
-    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
-)
-
 install(TARGETS traxxs_traj
                 traxxs_cart_traj
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
